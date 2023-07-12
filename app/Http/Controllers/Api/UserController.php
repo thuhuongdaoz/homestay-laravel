@@ -27,6 +27,10 @@ class UserController extends BaseController
      */
     public function store(Request $request)
     {
+        $authUser = auth()->user();
+        if ($authUser->role != 0){
+            return $this->sendError('Unauthorized.', [], 401);
+        }
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
@@ -52,10 +56,9 @@ class UserController extends BaseController
     public function show(User $user)
     {
 
-//        if (is_null($product)) {
+        //        if (is_null($product)) {
 //            return $this->sendError('Product not found.');
 //        }
-
         return $this->sendResponse(new UserResource($user), 'User retrieved successfully.');
     }
 
@@ -77,14 +80,12 @@ class UserController extends BaseController
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());
         }
-
         $user->name = $input['name'];
         $user->email = $input['email'];
         $user->phone_number = $input['phone_number'];
         $user->gender = $input['gender'];
         $user->birthday = $input['birthday'];
         $user->save();
-
         return $this->sendResponse(new ProductResource($user), 'Product updated successfully.');
     }
 
@@ -93,13 +94,36 @@ class UserController extends BaseController
      */
     public function destroy(User $user)
     {
+        $authUser = auth()->user();
+        if ($authUser->role != 0){
+            return $this->sendError('Unauthorized.', [], 401);
+        }
         $user->delete();
         return $this->sendResponse([], 'Product deleted successfully.');
     }
-    public function uploadAvatar(){
-        
+
+    public function uploadAvatar(Request $request){
+
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'avatar' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+        ]);
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());
+        }
+        $user = auth()->user();
+        $path = $request->file('avatar')->store('avatars');
+
+
+        $user->avatar = $path;
+
+        $user->save();
+
+        return $this->sendResponse($user, 'Upload image successfully.');
     }
+
     public function changePassword(Request $request){
+
         $input = $request->all();
 
         $validator = Validator::make($input, [
