@@ -20,14 +20,14 @@ class RegisterController extends BaseController
     public function register(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'mobile' => 'min:10',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|max:255|email|unique:users,email',
+            'phone_number' => 'min:10',
             'gender' => 'required|numeric|min:0|max:2',
             'birthday' => 'date',
             'role' => 'required|numeric|min:1|max:2',
-            'password' => 'required',
-            'c_password' => 'required|same:password',
+            'password' => 'required|string|min:8',
+            'c_password' => 'required|min:8|same:password',
         ]);
 
         if($validator->fails()){
@@ -35,7 +35,7 @@ class RegisterController extends BaseController
         }
 
         $input = $request->all();
-        $input['password'] = bcrypt($input['password']);
+//        $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
         $success['token'] =  $user->createToken('MyApp')->accessToken;
         $success['name'] =  $user->name;
