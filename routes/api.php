@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\RegisterController;
+use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\UserController;
 
 /*
@@ -23,17 +24,27 @@ use App\Http\Controllers\Api\UserController;
 Route::post('register', [RegisterController::class, 'register']);
 Route::post('login', [RegisterController::class, 'login']);
 Route::middleware('auth:api')->group(function () {
-    Route::middleware('admin.role')->prefix('admin')->group(function (){
-        Route::get('users', [UserController::class, 'index'])->name('users.index');
-        Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
-        Route::post('users', [UserController::class, 'store'])->name('users.store');
-        Route::match(['put', 'patch'], 'users/{user}', [UserController::class, 'update'])->name('users.update');
-        Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');//Create API Resource
+    Route::get('get-profile', [HomeController::class,'getProfile']);
+    Route::post('update-profile', [HomeController::class,'updateProfile']);
+    Route::post('upload-avatar', [HomeController::class,'uploadAvatar']);
+    Route::post('change-password', [HomeController::class,'changePassword']);
+
+    Route::middleware('admin.role')->group(function (){
+        Route::apiResource('users', UserController::class);
+        Route::prefix('users')->group(function (){
+            Route::post('{user}/upload-avatar', [HomeController::class,'uploadAvatar']);
+            Route::post('{user}/change-password', [HomeController::class,'changePassword']);
+        });
+//        Route::get('users', [UserController::class, 'index'])->name('users.index');
+//        Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
+//        Route::post('users', [UserController::class, 'store'])->name('users.store');
+//        Route::match(['put', 'patch'], 'users/{user}', [UserController::class, 'update'])->name('users.update');
+//        Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');//Create API Resource
     });
 
-    Route::middleware('client.role')->prefix('client')->group(function (){
-        Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
-    });
+//    Route::middleware('client.role')->prefix('client')->group(function (){
+//        Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
+//    });
 
 //    Route::get('users', [UserController::class, 'index'])->name('users.index')->middleware('admin.role');
 
@@ -49,7 +60,7 @@ Route::middleware('auth:api')->group(function () {
 
 });
 
-//Route::apiResource('users', UserController::class);
+
 
 
 
