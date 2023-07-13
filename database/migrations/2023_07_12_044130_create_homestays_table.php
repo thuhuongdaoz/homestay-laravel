@@ -13,8 +13,18 @@ return new class extends Migration
     {
         Schema::create('homestays', function (Blueprint $table) {
             $table->id();
+            $table->integer('user_id');
             $table->string('name');
-            $table->
+            $table->string('ward_code');
+            $table->string('address');
+            $table->string('preview_image')->nullable();
+            $table->string('desc')->nullable();
+            $table->boolean('restaurant');
+            $table->boolean('free-wifi');
+            $table->boolean('pool');
+            $table->boolean('spa');
+            $table->boolean('bar');
+            $table->boolean('breakfast');
             $table->timestamps();
         });
     }

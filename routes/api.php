@@ -1,10 +1,12 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\RegisterController;
+
 use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\LocationController;
+use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\UserController;
+use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -23,9 +25,18 @@ use App\Http\Controllers\Api\UserController;
 
 Route::post('register', [RegisterController::class, 'register']);
 Route::post('login', [RegisterController::class, 'login']);
+
+//Route::get('provinces',[ProvinceController::class,'index']);
+//Route::get('districts',[DistrictController::class,'index']);
+//Route::get('wards',[WardController::class,'index']);
+
+Route::get('locations',[LocationController::class,'index']);
+Route::get('locations/{location}',[LocationController::class,'show']);
+Route::post('locations',[LocationController::class,'store']);
+
 Route::middleware('auth:api')->group(function () {
-    Route::get('get-profile', [HomeController::class,'getProfile']);
-    Route::post('update-profile', [HomeController::class,'updateProfile']);
+    Route::get('profile', [HomeController::class,'getProfile']);
+    Route::post('profile', [HomeController::class,'updateProfile']);
     Route::post('upload-avatar', [HomeController::class,'uploadAvatar']);
     Route::post('change-password', [HomeController::class,'changePassword']);
 
@@ -35,12 +46,31 @@ Route::middleware('auth:api')->group(function () {
             Route::post('{user}/upload-avatar', [HomeController::class,'uploadAvatar']);
             Route::post('{user}/change-password', [HomeController::class,'changePassword']);
         });
-//        Route::get('users', [UserController::class, 'index'])->name('users.index');
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //        Route::get('users', [UserController::class, 'index'])->name('users.index');
 //        Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
 //        Route::post('users', [UserController::class, 'store'])->name('users.store');
 //        Route::match(['put', 'patch'], 'users/{user}', [UserController::class, 'update'])->name('users.update');
 //        Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');//Create API Resource
-    });
+
+
+
+
+
 
 //    Route::middleware('client.role')->prefix('client')->group(function (){
 //        Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');

@@ -7,18 +7,26 @@ use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Validator;
 
 class HomeController extends BaseController
 {
     public function getProfile(){
+        dd(asset('storage/public/avatars/TSywCyFpma8nibKE2zM4Uzjhq8qrNgJeHzaYiM77.jpg'));
+//        $path = asset('public/avatars/aWRBPgTEec3C3PHdDl8QxOf7Z92xytDVisVH3OS3.jpg', true);
+//        dd($path);
+//        dd(Storage::url('avatars/RyRr1S62CLyEfO5LhyMevYbdUry6897qppvUMXxr.jpg'));
+//        dd(Storage::get('avatars/RyRr1S62CLyEfO5LhyMevYbdUry6897qppvUMXxr.jpg'));
         $user = Auth::user();
         return $this->sendResponse(new UserResource($user), 'Profile retrieved successfully.');
     }
     public function updateProfile(Request $request){
         $input = $request->all();
+        $user = Auth::user();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|max:255|email|unique:users,email',
+            'email' => 'required|string|max:255|email|unique:users,email,'.$user->id,
             'phone_number' => 'min:10',
             'gender' => 'required|numeric|min:0|max:2',
             'birthday' => 'date',
@@ -27,14 +35,14 @@ class HomeController extends BaseController
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());
         }
-        $user = Auth::user();
+
         $user->name = $input['name'];
         $user->email = $input['email'];
         $user->phone_number = $input['phone_number'];
         $user->gender = $input['gender'];
         $user->birthday = $input['birthday'];
         $user->save();
-        return $this->sendResponse(new ProductResource($user), 'Profile updated successfully.');
+        return $this->sendResponse(new UserResource($user), 'Profile updated successfully.');
     }
     public function uploadAvatar(Request $request){
         $input = $request->all();
@@ -45,7 +53,9 @@ class HomeController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());
         }
         $user = Auth::user();
-        $path = $request->file('avatar')->store('avatars');
+
+//        $path = $request->file('avatar')->store('public/avatars');
+        $path = Storage::putFile('avatars', $request->file('avatar'));
 
 
         $user->avatar = $path;
