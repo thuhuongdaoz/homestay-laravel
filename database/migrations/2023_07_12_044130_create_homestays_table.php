@@ -17,10 +17,11 @@ return new class extends Migration
             $table->string('name');
             $table->string('location_id');
             $table->string('address');
-            $table->string('preview_image');
-            $table->string('desc')->nullable();
+            $table->string('avatar');
+            $table->text('images');
+            $table->string('desc');
             $table->boolean('restaurant');
-            $table->boolean('free-wifi');
+            $table->boolean('free_wifi');
             $table->boolean('pool');
             $table->boolean('spa');
             $table->boolean('bar');

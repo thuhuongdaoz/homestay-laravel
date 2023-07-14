@@ -5,6 +5,8 @@ use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\FileController;
+use App\Http\Controllers\Api\HomestayController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -33,7 +35,9 @@ Route::post('login', [RegisterController::class, 'login']);
 Route::get('locations',[LocationController::class,'index']);
 Route::get('locations/{location}',[LocationController::class,'show']);
 
-//Route::post('homestays',[])
+Route::post('upload-images',[FileController::class,'store']);
+Route::post('homestays',[HomestayController::class, 'store']);
+
 
 Route::middleware('auth:api')->group(function () {
     Route::get('profile', [HomeController::class,'getProfile']);

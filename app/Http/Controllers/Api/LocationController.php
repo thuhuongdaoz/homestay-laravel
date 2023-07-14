@@ -13,7 +13,7 @@ class LocationController extends BaseController
 {
     public function index(){
         $locations = Location::all();
-        return $this->sendResponse($locations, 'Locations retrieved successfully');
+        return $this->sendResponse(LocationResource::collection($locations), 'Locations retrieved successfully');
     }
     public function store(Request $request){
         $input = $request->all();
@@ -33,7 +33,7 @@ class LocationController extends BaseController
 
     }
     public function show(Location $location){
-        return $this->sendResponse($location, 'Location retrieved successfully');
+        return $this->sendResponse(new LocationResource($location), 'Location retrieved successfully');
     }
     public function update(Request $request,Location $location){
         $input = $request->all();
