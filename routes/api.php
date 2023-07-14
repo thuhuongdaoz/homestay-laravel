@@ -32,12 +32,13 @@ Route::post('login', [RegisterController::class, 'login']);
 
 Route::get('locations',[LocationController::class,'index']);
 Route::get('locations/{location}',[LocationController::class,'show']);
-Route::post('locations',[LocationController::class,'store']);
+
+//Route::post('homestays',[])
 
 Route::middleware('auth:api')->group(function () {
     Route::get('profile', [HomeController::class,'getProfile']);
-    Route::post('profile', [HomeController::class,'updateProfile']);
-    Route::post('upload-avatar', [HomeController::class,'uploadAvatar']);
+    Route::put('profile', [HomeController::class,'updateProfile']);
+//    Route::post('upload-avatar', [HomeController::class,'uploadAvatar']);
     Route::post('change-password', [HomeController::class,'changePassword']);
 
     Route::middleware('admin.role')->group(function (){
@@ -46,6 +47,11 @@ Route::middleware('auth:api')->group(function () {
             Route::post('{user}/upload-avatar', [HomeController::class,'uploadAvatar']);
             Route::post('{user}/change-password', [HomeController::class,'changePassword']);
         });
+
+
+        Route::post('locations',[LocationController::class,'store']);
+        Route::match(['put', 'patch'],'locations/{location}',[LocationController::class,'update']);
+        Route::delete('locations/{location}',[LocationController::class,'destroy']);
 
     });
 

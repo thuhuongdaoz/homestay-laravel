@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController ;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Validator;
 use Illuminate\Http\JsonResponse;
 
@@ -22,6 +23,7 @@ class RegisterController extends BaseController
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255|email|unique:users,email',
+            'avatar' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             'phone_number' => 'min:10',
             'gender' => 'required|numeric|min:0|max:2',
             'birthday' => 'date',
@@ -35,6 +37,11 @@ class RegisterController extends BaseController
         }
 
         $input = $request->all();
+//        dd(isset($input['avatar']));
+        if (isset($input['avatar'])){
+            $path = $request->file('avatar')->store('public/avatars');
+            $input['avatar'] = Str::substr($path,7);
+        }
 //        $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
         $success['token'] =  $user->createToken('MyApp')->accessToken;

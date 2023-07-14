@@ -8,12 +8,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Validator;
 
 class HomeController extends BaseController
 {
     public function getProfile(){
-        dd(asset('storage/public/avatars/TSywCyFpma8nibKE2zM4Uzjhq8qrNgJeHzaYiM77.jpg'));
+//        dd(asset('storage/public/avatars/TSywCyFpma8nibKE2zM4Uzjhq8qrNgJeHzaYiM77.jpg'));
 //        $path = asset('public/avatars/aWRBPgTEec3C3PHdDl8QxOf7Z92xytDVisVH3OS3.jpg', true);
 //        dd($path);
 //        dd(Storage::url('avatars/RyRr1S62CLyEfO5LhyMevYbdUry6897qppvUMXxr.jpg'));
@@ -27,6 +28,7 @@ class HomeController extends BaseController
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255|email|unique:users,email,'.$user->id,
+            'avatar' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             'phone_number' => 'min:10',
             'gender' => 'required|numeric|min:0|max:2',
             'birthday' => 'date',
@@ -41,29 +43,34 @@ class HomeController extends BaseController
         $user->phone_number = $input['phone_number'];
         $user->gender = $input['gender'];
         $user->birthday = $input['birthday'];
+        if (isset($input['avatar'])){
+            $path = $request->file('avatar')->store('public/avatars');
+            $user->avatar = Str::substr($path,7);
+        }
         $user->save();
+
         return $this->sendResponse(new UserResource($user), 'Profile updated successfully.');
     }
-    public function uploadAvatar(Request $request){
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'avatar' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-        ]);
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());
-        }
-        $user = Auth::user();
-
-//        $path = $request->file('avatar')->store('public/avatars');
-        $path = Storage::putFile('avatars', $request->file('avatar'));
-
-
-        $user->avatar = $path;
-
-        $user->save();
-
-        return $this->sendResponse($user, 'Upload image successfully.');
-    }
+//    public function uploadAvatar(Request $request){
+//        $input = $request->all();
+//        $validator = Validator::make($input, [
+//            'avatar' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+//        ]);
+//        if($validator->fails()){
+//            return $this->sendError('Validation Error.', $validator->errors());
+//        }
+//        $user = Auth::user();
+//
+////        $path = $request->file('avatar')->store('public/avatars');
+//        $path = Storage::putFile('avatars', $request->file('avatar'));
+//
+//
+//        $user->avatar = $path;
+//
+//        $user->save();
+//
+//        return $this->sendResponse($user, 'Upload image successfully.');
+//    }
     public function changePassword(Request $request){
         $input = $request->all();
 

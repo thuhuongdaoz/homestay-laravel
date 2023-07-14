@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id');
             $table->string('name');
-            $table->string('ward_code');
+            $table->string('location_id');
             $table->string('address');
-            $table->string('preview_image')->nullable();
+            $table->string('preview_image');
             $table->string('desc')->nullable();
             $table->boolean('restaurant');
             $table->boolean('free-wifi');
