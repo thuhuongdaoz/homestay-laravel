@@ -99,7 +99,7 @@ class UserController extends BaseController
             return $this->sendError('Unauthorized.', [], 401);
         }
         $user->delete();
-        return $this->sendResponse([], 'Product deleted successfully.');
+        return $this->sendResponse([], 'User deleted successfully.');
     }
 
     public function uploadAvatar(Request $request, User $user){

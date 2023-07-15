@@ -11,9 +11,10 @@ class Room extends Model
 
     protected $fillable = [
         'homestay_id',
+        'name',
         'adults',
         'child',
         'price',
-        'quantity',
+        'count',
     ];
 }

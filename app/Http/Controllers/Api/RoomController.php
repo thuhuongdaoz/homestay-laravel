@@ -26,17 +26,20 @@ class RoomController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'homestay_id' => 'required|numeric',
+            'name' => 'required|string',
             'adults' => 'required|numeric',
             'child' => 'required|numeric',
             'price' => 'required|numeric',
-            'quantity' => 'required|numeric',
+            'count' => 'required|numeric',
         ]);
 
         if ($validator->fails()){
             $this->sendError('Validation Error.', $validator->errors(), 400);
         }
 
-        
+        $room = Room::create($input);
+        return $this->sendResponse($room, 'Room created successfully');
+
     }
 
     /**
@@ -44,7 +47,7 @@ class RoomController extends BaseController
      */
     public function show(Room $room)
     {
-        //
+        return $this->sendResponse($room, 'Room achieved successfully');
     }
 
     /**
@@ -52,7 +55,30 @@ class RoomController extends BaseController
      */
     public function update(Request $request, Room $room)
     {
-        //
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'homestay_id' => 'required|numeric',
+            'name' => 'required|string',
+            'adults' => 'required|numeric',
+            'child' => 'required|numeric',
+            'price' => 'required|numeric',
+            'count' => 'required|numeric',
+        ]);
+
+        if ($validator->fails()){
+            return $this->sendError('Validation Error.',$validator->errors(), 400);
+        }
+
+        $room->homestay_id = $input['homestay_id'];
+        $room->name = $input['name'];
+        $room->adults = $input['adults'];
+        $room->child = $input['child'];
+        $room->price = $input['price'];
+        $room->count = $input['count'];
+
+        $room->save();
+
+        return $this->sendResponse($room, 'Room updated successfully');
     }
 
     /**
@@ -60,6 +86,7 @@ class RoomController extends BaseController
      */
     public function destroy(Room $room)
     {
-        //
+        $room->delete();
+        return $this->sendResponse([], 'Room deleted successfully');
     }
 }

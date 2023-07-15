@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\HomestayController;
+use App\Http\Controllers\Api\RoomController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -37,6 +38,13 @@ Route::get('locations/{location}',[LocationController::class,'show']);
 
 Route::post('upload-images',[FileController::class,'store']);
 Route::post('homestays',[HomestayController::class, 'store']);
+
+Route::get('rooms', [RoomController::class,'index']);
+Route::post('rooms', [RoomController::class,'store']);
+Route::get('rooms/{room}', [RoomController::class,'show']);
+Route::put('rooms/{room}', [RoomController::class,'update']);
+Route::delete('rooms/{room}', [RoomController::class,'destroy']);
+
 
 
 Route::middleware('auth:api')->group(function () {

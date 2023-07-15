@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
             $table->integer('homestay_id');
+            $table->string('name');
             $table->integer('adults');
             $table->integer('child');
             $table->integer('price');
-            $table->integer('quantity');
+            $table->integer('count');
             $table->timestamps();
         });
     }
