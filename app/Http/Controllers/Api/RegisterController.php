@@ -26,14 +26,14 @@ class RegisterController extends BaseController
             'avatar' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             'phone_number' => 'min:10',
             'gender' => 'required|numeric|min:0|max:2',
-            'birthday' => 'date',
-            'role' => 'required|numeric|min:1|max:2',
+            'birthday' => 'required|date',
+            'role' => 'required|numeric|min:0|max:2',
             'password' => 'required|string|min:8',
             'c_password' => 'required|min:8|same:password',
         ]);
 
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());
+            return $this->sendError('Validation Error.', $validator->errors(), 400);
         }
 
         $input = $request->all();
