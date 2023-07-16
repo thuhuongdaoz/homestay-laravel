@@ -12,10 +12,13 @@ class RoomController extends BaseController
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $rooms = Room::all();
-        return $this->sendResponse($rooms,'Rooms retrieved successfully');
+        $rooms = Room::query();
+        if ($request->has('homestay_id') && isset($request->homestay_id)){
+            $rooms->where('homestay_id', $request->homestay_id);
+        }
+        return $this->sendResponse($rooms->paginate(),'Rooms retrieved successfully');
     }
 
     /**
@@ -29,6 +32,8 @@ class RoomController extends BaseController
             'name' => 'required|string',
             'adults' => 'required|numeric',
             'child' => 'required|numeric',
+            'double_bed' => 'required|numeric',
+            'single_bed' => 'required|numeric',
             'price' => 'required|numeric',
             'count' => 'required|numeric',
         ]);
@@ -61,6 +66,8 @@ class RoomController extends BaseController
             'name' => 'required|string',
             'adults' => 'required|numeric',
             'child' => 'required|numeric',
+            'double_bed' => 'required|numeric',
+            'single_bed' => 'required|numeric',
             'price' => 'required|numeric',
             'count' => 'required|numeric',
         ]);
@@ -73,6 +80,8 @@ class RoomController extends BaseController
         $room->name = $input['name'];
         $room->adults = $input['adults'];
         $room->child = $input['child'];
+        $room->double_bed = $input['double_bed'];
+        $room->single_bed = $input['single_bed'];
         $room->price = $input['price'];
         $room->count = $input['count'];
 

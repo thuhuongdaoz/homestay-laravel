@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Homestay;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -13,9 +14,13 @@ class HomestayController extends BaseController
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-
+        $homestays = Homestay::query();
+        if ($request->has('user_id') && isset($request->user_id)){
+            $homestays->where('user_id', $request->user_id);
+        }
+        return $this->sendResponse($homestays->paginate(), 'Homestays achieved successfully');
     }
 
     /**
@@ -23,9 +28,9 @@ class HomestayController extends BaseController
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
         $input = $request->all();
         $validator = Validator::make($input, [
-            'user_id' => 'required|numeric',
             'name' => 'required|string',
             'location_id' => 'required|numeric',
             'address' => 'required|string',
@@ -43,6 +48,7 @@ class HomestayController extends BaseController
             return $this->sendError('Validation Error', $validator->errors());
         }
 
+        $input['user_id'] = $user->id;
         $path = $request->file('avatar')->store('public/homestay/avatars');
         $input['avatar'] = Str::substr($path,7);
         $input['restaurant'] = filter_var($input['restaurant'], FILTER_VALIDATE_BOOLEAN);
@@ -61,7 +67,7 @@ class HomestayController extends BaseController
      */
     public function show(Homestay $homestay)
     {
-        //
+        return $this->sendResponse($homestay, 'Homestay achieved successfully');
     }
 
     /**
@@ -71,7 +77,6 @@ class HomestayController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'user_id' => 'required|numeric',
             'name' => 'required|string',
             'location_id' => 'required|numeric',
             'address' => 'required|string',
@@ -89,7 +94,6 @@ class HomestayController extends BaseController
             return $this->sendError('Validation Error', $validator->errors());
         }
 
-        $homestay->user_id = $input['user_id'];
         $homestay->name = $input['name'];
         $homestay->location_id = $input['location_id'];
         $homestay->address = $input['address'];

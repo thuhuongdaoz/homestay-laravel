@@ -14,11 +14,6 @@ use Validator;
 class HomeController extends BaseController
 {
     public function getProfile(){
-//        dd(asset('storage/public/avatars/TSywCyFpma8nibKE2zM4Uzjhq8qrNgJeHzaYiM77.jpg'));
-//        $path = asset('public/avatars/aWRBPgTEec3C3PHdDl8QxOf7Z92xytDVisVH3OS3.jpg', true);
-//        dd($path);
-//        dd(Storage::url('avatars/RyRr1S62CLyEfO5LhyMevYbdUry6897qppvUMXxr.jpg'));
-//        dd(Storage::get('avatars/RyRr1S62CLyEfO5LhyMevYbdUry6897qppvUMXxr.jpg'));
         $user = Auth::user();
         return $this->sendResponse(new UserResource($user), 'Profile retrieved successfully.');
     }
@@ -29,9 +24,9 @@ class HomeController extends BaseController
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255|email|unique:users,email,'.$user->id,
             'avatar' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            'phone_number' => 'min:10',
+            'phone_number' => 'numeric|min:10',
             'gender' => 'required|numeric|min:0|max:2',
-            'birthday' => 'date',
+            'birthday' => 'required|date',
         ]);
 
         if($validator->fails()){

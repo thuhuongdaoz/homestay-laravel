@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('name');
             $table->integer('adults');
             $table->integer('child');
+            $table->integer('double_bed');
+            $table->integer('single_bed');
             $table->integer('price');
             $table->integer('count');
             $table->timestamps();

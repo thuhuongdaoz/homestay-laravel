@@ -14,6 +14,8 @@ class Room extends Model
         'name',
         'adults',
         'child',
+        'double_bed',
+        'single_bed',
         'price',
         'count',
     ];
