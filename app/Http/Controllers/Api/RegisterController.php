@@ -45,6 +45,7 @@ class RegisterController extends BaseController
 //        $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
         $success['token'] =  $user->createToken('MyApp')->accessToken;
+        $success['id'] =  $user->id;
         $success['name'] =  $user->name;
         $success['role'] = $user->role;
 
@@ -63,6 +64,7 @@ class RegisterController extends BaseController
 
             $user = Auth::user();
             $success['token'] =  $user->createToken('MyApp')-> accessToken;
+            $success['id'] =  $user->id;
             $success['name'] =  $user->name;
             $success['role'] = $user->role;
 
