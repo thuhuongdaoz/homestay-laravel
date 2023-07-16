@@ -48,6 +48,7 @@ class RegisterController extends BaseController
         $success['id'] =  $user->id;
         $success['name'] =  $user->name;
         $success['role'] = $user->role;
+        $success['avatar'] = $user->avatar;
 
 
         return $this->sendResponse($success, 'User register successfully.');
@@ -67,6 +68,7 @@ class RegisterController extends BaseController
             $success['id'] =  $user->id;
             $success['name'] =  $user->name;
             $success['role'] = $user->role;
+            $success['avatar'] = $user->avatar;
 
             return $this->sendResponse($success, 'User login successfully.');
         }
