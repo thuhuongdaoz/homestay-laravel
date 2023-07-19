@@ -36,7 +36,9 @@ Route::post('login', [RegisterController::class, 'login']);
 Route::get('locations',[LocationController::class,'index']);
 Route::get('locations/{location}',[LocationController::class,'show']);
 
-Route::post('upload-images',[FileController::class,'store']);
+
+Route::post('upload-image',[FileController::class,'store']);
+//Route::post('upload-multi-image',[FileController::class,'uploadMultiFile']);
 
 
 Route::get('homestays',[HomestayController::class,'index']);
@@ -62,8 +64,8 @@ Route::middleware('auth:api')->group(function () {
 
     Route::middleware('owner.role')->group(function (){
         Route::post('homestays',[HomestayController::class, 'store']);
-        Route::post('homestays/{homestay}',[HomestayController::class, 'update']);
-        Route::delete('homestays',[HomestayController::class, 'destroy']);
+        Route::put('homestays/{homestay}',[HomestayController::class, 'update']);
+        Route::delete('homestays/{homestay}',[HomestayController::class, 'destroy']);
 
         Route::post('rooms', [RoomController::class,'store']);
         Route::put('rooms/{room}', [RoomController::class,'update']);

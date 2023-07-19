@@ -18,7 +18,8 @@ class RoomController extends BaseController
         if ($request->has('homestay_id') && isset($request->homestay_id)){
             $rooms->where('homestay_id', $request->homestay_id);
         }
-        return $this->sendResponse($rooms->paginate(),'Rooms retrieved successfully');
+        $rooms = $rooms->get();
+        return $this->sendResponse($rooms,'Rooms retrieved successfully');
     }
 
     /**
@@ -30,12 +31,12 @@ class RoomController extends BaseController
         $validator = Validator::make($input, [
             'homestay_id' => 'required|numeric',
             'name' => 'required|string',
-            'adults' => 'required|numeric',
+            'adults' => 'required|numeric|min:1',
             'child' => 'required|numeric',
             'double_bed' => 'required|numeric',
             'single_bed' => 'required|numeric',
             'price' => 'required|numeric',
-            'count' => 'required|numeric',
+            'count' => 'required|numeric|min:1',
         ]);
 
         if ($validator->fails()){
@@ -60,23 +61,22 @@ class RoomController extends BaseController
      */
     public function update(Request $request, Room $room)
     {
+
         $input = $request->all();
         $validator = Validator::make($input, [
-            'homestay_id' => 'required|numeric',
             'name' => 'required|string',
-            'adults' => 'required|numeric',
+            'adults' => 'required|numeric|min:1',
             'child' => 'required|numeric',
             'double_bed' => 'required|numeric',
             'single_bed' => 'required|numeric',
             'price' => 'required|numeric',
-            'count' => 'required|numeric',
+            'count' => 'required|numeric|min:1',
         ]);
 
         if ($validator->fails()){
             return $this->sendError('Validation Error.',$validator->errors(), 400);
         }
 
-        $room->homestay_id = $input['homestay_id'];
         $room->name = $input['name'];
         $room->adults = $input['adults'];
         $room->child = $input['child'];

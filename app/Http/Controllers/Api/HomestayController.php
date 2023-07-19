@@ -20,7 +20,10 @@ class HomestayController extends BaseController
         if ($request->has('user_id') && isset($request->user_id)){
             $homestays->where('user_id', $request->user_id);
         }
-        return $this->sendResponse($homestays->paginate(), 'Homestays achieved successfully');
+        $homestays = $homestays->join('locations', 'homestays.location_id', '=', 'locations.id')
+                    ->select('homestays.*','locations.name as location_name')
+                    ->get();
+        return $this->sendResponse($homestays, 'Homestays achieved successfully');
     }
 
     /**
@@ -34,29 +37,15 @@ class HomestayController extends BaseController
             'name' => 'required|string',
             'location_id' => 'required|numeric',
             'address' => 'required|string',
-            'avatar' => 'required|image',
-            'images' => 'required|string',
+            'avatar' => 'required|string',
             'desc' => 'required|string',
-            'restaurant' => 'required|boolean',
-            'free_wifi' => 'required|boolean',
-            'pool' => 'required|boolean',
-            'spa' => 'required|boolean',
-            'bar' => 'required|boolean',
-            'breakfast' => 'required|boolean',
         ]);
         if ($validator->fails()){
             return $this->sendError('Validation Error', $validator->errors());
         }
-
         $input['user_id'] = $user->id;
-        $path = $request->file('avatar')->store('public/homestay/avatars');
-        $input['avatar'] = Str::substr($path,7);
-        $input['restaurant'] = filter_var($input['restaurant'], FILTER_VALIDATE_BOOLEAN);
-        $input['free_wifi'] = filter_var($input['free_wifi'], FILTER_VALIDATE_BOOLEAN);
-        $input['pool'] = filter_var($input['pool'], FILTER_VALIDATE_BOOLEAN);
-        $input['spa'] = filter_var($input['spa'], FILTER_VALIDATE_BOOLEAN);
-        $input['bar'] = filter_var($input['bar'], FILTER_VALIDATE_BOOLEAN);
-        $input['breakfast'] = filter_var($input['breakfast'], FILTER_VALIDATE_BOOLEAN);
+        $input['images'] =json_encode($input['images']);
+        $input['utilities'] =json_encode($input['utilities']);
         $homestay = Homestay::create($input);
         return $this->sendResponse($homestay,'Homestay created successfully.', 201);
 
@@ -80,15 +69,8 @@ class HomestayController extends BaseController
             'name' => 'required|string',
             'location_id' => 'required|numeric',
             'address' => 'required|string',
-            'avatar' => 'image',
-            'images' => 'required|string',
+            'avatar' => 'required|string',
             'desc' => 'required|string',
-            'restaurant' => 'required|boolean',
-            'free_wifi' => 'required|boolean',
-            'pool' => 'required|boolean',
-            'spa' => 'required|boolean',
-            'bar' => 'required|boolean',
-            'breakfast' => 'required|boolean',
         ]);
         if ($validator->fails()){
             return $this->sendError('Validation Error', $validator->errors());
@@ -97,19 +79,9 @@ class HomestayController extends BaseController
         $homestay->name = $input['name'];
         $homestay->location_id = $input['location_id'];
         $homestay->address = $input['address'];
-        $homestay->images = $input['images'];
+        $homestay->images = json_encode($input['images']);
         $homestay->desc = $input['desc'];
-        $homestay->restaurant = $input['restaurant'];
-        $homestay->free_wifi = $input['free_wifi'];
-        $homestay->pool = $input['pool'];
-        $homestay->spa = $input['spa'];
-        $homestay->bar = $input['bar'];
-        $homestay->breakfast = $input['breakfast'];
-
-        if (isset($input['avatar'])){
-            $path = $request->file('avatar')->store('public/homestay/avatars');
-            $homestay->avatar = Str::substr($path,7);
-        }
+        $homestay->utilities = json_encode($input['utilities']);
         $homestay->save();
         return $this->sendResponse($homestay,'Homestay updated successfully.' );
     }

@@ -12,10 +12,14 @@ use Validator;
 class LocationController extends BaseController
 {
     public function index(){
-        $locations = Location::all();
+        $locations = Location::select(
+            "id as value",
+            "name as label"
+        )->get();;
         return $this->sendResponse(LocationResource::collection($locations), 'Locations retrieved successfully');
     }
     public function store(Request $request){
+
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string',

@@ -17,11 +17,12 @@ class Homestay extends Model
             'avatar',
             'images',
             'desc',
-            'restaurant',
-            'free_wifi',
-            'pool',
-            'spa',
-            'bar',
-            'breakfast',
+//            'restaurant',
+//            'free_wifi',
+//            'pool',
+//            'spa',
+//            'bar',
+//            'breakfast',
+    'utilities',
     ];
 }

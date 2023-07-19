@@ -15,17 +15,18 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id');
             $table->string('name');
-            $table->string('location_id');
+            $table->integer('location_id');
             $table->string('address');
             $table->string('avatar');
             $table->text('images');
             $table->string('desc');
-            $table->boolean('restaurant');
-            $table->boolean('free_wifi');
-            $table->boolean('pool');
-            $table->boolean('spa');
-            $table->boolean('bar');
-            $table->boolean('breakfast');
+//            $table->boolean('restaurant');
+//            $table->boolean('free_wifi');
+//            $table->boolean('pool');
+//            $table->boolean('spa');
+//            $table->boolean('bar');
+//            $table->boolean('breakfast');
+            $table->string('utilities');
             $table->timestamps();
         });
     }
