@@ -23,7 +23,7 @@ class HomeController extends BaseController
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255|email|unique:users,email,'.$user->id,
-            'avatar' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'avatar' => 'string',
             'phone_number' => 'numeric|min:10',
             'gender' => 'required|numeric|min:0|max:2',
             'birthday' => 'required|date',
@@ -38,10 +38,11 @@ class HomeController extends BaseController
         $user->phone_number = $input['phone_number'];
         $user->gender = $input['gender'];
         $user->birthday = $input['birthday'];
-        if (isset($input['avatar'])){
-            $path = $request->file('avatar')->store('public/avatars');
-            $user->avatar = Str::substr($path,7);
-        }
+//        if (isset($input['avatar'])){
+//            $path = $request->file('avatar')->store('public/avatars');
+//            $user->avatar = Str::substr($path,7);
+//        }
+        $user->avatar = $input['avatar'];
         $user->save();
 
         return $this->sendResponse(new UserResource($user), 'Profile updated successfully.');

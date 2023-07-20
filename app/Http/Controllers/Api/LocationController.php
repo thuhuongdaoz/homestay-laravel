@@ -7,6 +7,7 @@ use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Validator;
+use DB;
 
 
 class LocationController extends BaseController
@@ -14,7 +15,8 @@ class LocationController extends BaseController
     public function index(){
         $locations = Location::select(
             "id as value",
-            "name as label"
+            "name as label",
+            "thumbnail"
         )->get();;
         return $this->sendResponse(LocationResource::collection($locations), 'Locations retrieved successfully');
     }
@@ -64,6 +66,12 @@ class LocationController extends BaseController
     public function destroy(Location $location){
         $location->delete();
         return $this->sendResponse([], 'Location deleted successfully.');
-
+    }
+    public function top(){
+        $locations = DB::table('orders')
+            ->join('homestays', 'orders.homestay_id', '=', 'homestays.id')
+            ->join('locations', 'homestays.location_id', '=', 'orders.user_id')
+            ->select('users.*', 'contacts.phone', 'orders.price')
+            ->get();
     }
 }

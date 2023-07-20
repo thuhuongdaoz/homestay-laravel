@@ -35,6 +35,7 @@ Route::post('login', [RegisterController::class, 'login']);
 
 Route::get('locations',[LocationController::class,'index']);
 Route::get('locations/{location}',[LocationController::class,'show']);
+Route::get('locations/top',[LocationController::class,'top']);
 
 
 Route::post('upload-image',[FileController::class,'store']);
@@ -47,14 +48,6 @@ Route::get('homestays/{homestay}',[HomestayController::class,'show']);
 
 Route::get('rooms', [RoomController::class,'index']);
 Route::get('rooms/{room}', [RoomController::class,'show']);
-
-
-
-
-
-
-
-
 
 Route::middleware('auth:api')->group(function () {
     Route::get('profile', [HomeController::class,'getProfile']);
