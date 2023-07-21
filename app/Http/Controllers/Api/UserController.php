@@ -27,18 +27,19 @@ class UserController extends BaseController
      */
     public function store(Request $request)
     {
-        $authUser = Auth::user();
-        if ($authUser->role != 0){
-            return $this->sendError('Unauthorized.', [], 401);
-        }
+//        $authUser = Auth::user();
+//        if ($authUser->role != 0){
+//            return $this->sendError('Unauthorized.', [], 401);
+//        }
         $input = $request->all();
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255|email|unique:users,email',
+            'avatar' => 'string',
             'phone_number' => 'min:10',
             'gender' => 'required|numeric|min:0|max:2',
-            'birthday' => 'date',
-            'role' => 'required|numeric|min:1|max:2',
+            'birthday' => 'required|date',
+            'role' => 'required|numeric|min:0|max:2',
             'password' => 'required|string|min:8',
             'c_password' => 'required|min:8|same:password',
         ]);
@@ -71,10 +72,12 @@ class UserController extends BaseController
 
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|max:255|email|unique:users,email',
+            'email' => 'required|string|max:255|email|unique:users,email,'.$user->id,
+            'avatar' => 'string',
             'phone_number' => 'min:10',
             'gender' => 'required|numeric|min:0|max:2',
-            'birthday' => 'date',
+            'birthday' => 'required|date',
+            'role' => 'required|numeric|min:0|max:2',
         ]);
 
         if($validator->fails()){
@@ -82,10 +85,24 @@ class UserController extends BaseController
         }
         $user->name = $input['name'];
         $user->email = $input['email'];
+        $user->avatar = $input['avatar'];
         $user->phone_number = $input['phone_number'];
         $user->gender = $input['gender'];
         $user->birthday = $input['birthday'];
+        $user->role = $input['role'];
         $user->save();
+         if($input["change_password"] == true){
+             $validator = Validator::make($input, [
+                 'password' => 'required|string|min:8',
+                 'c_password' => 'required|min:8|same:password',
+             ]);
+             if($validator->fails()){
+                 return $this->sendError('Validation Error.', $validator->errors());
+             }
+             $user->password = $input['password'];
+             $user->save();
+         }
+
         return $this->sendResponse(new ProductResource($user), 'User updated successfully.');
     }
 
@@ -94,10 +111,10 @@ class UserController extends BaseController
      */
     public function destroy(User $user)
     {
-        $authUser = auth()->user();
-        if ($authUser->role != 0){
-            return $this->sendError('Unauthorized.', [], 401);
-        }
+//        $authUser = auth()->user();
+//        if ($authUser->role != 0){
+//            return $this->sendError('Unauthorized.', [], 401);
+//        }
         $user->delete();
         return $this->sendResponse([], 'User deleted successfully.');
     }

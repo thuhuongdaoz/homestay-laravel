@@ -35,7 +35,7 @@ Route::post('login', [RegisterController::class, 'login']);
 
 Route::get('locations',[LocationController::class,'index']);
 Route::get('locations/{location}',[LocationController::class,'show']);
-Route::get('locations/top',[LocationController::class,'top']);
+Route::get('top-locations',[LocationController::class,'top']);
 
 
 Route::post('upload-image',[FileController::class,'store']);
@@ -44,6 +44,7 @@ Route::post('upload-image',[FileController::class,'store']);
 
 Route::get('homestays',[HomestayController::class,'index']);
 Route::get('homestays/{homestay}',[HomestayController::class,'show']);
+Route::get('top-homestays',[HomestayController::class,'top']);
 
 
 Route::get('rooms', [RoomController::class,'index']);

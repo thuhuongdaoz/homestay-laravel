@@ -68,10 +68,15 @@ class LocationController extends BaseController
         return $this->sendResponse([], 'Location deleted successfully.');
     }
     public function top(){
-        $locations = DB::table('orders')
-            ->join('homestays', 'orders.homestay_id', '=', 'homestays.id')
-            ->join('locations', 'homestays.location_id', '=', 'orders.user_id')
-            ->select('users.*', 'contacts.phone', 'orders.price')
+        $locations = DB::table('locations')
+            ->leftJoin('homestays', 'locations.id', '=', 'homestays.location_id')
+            ->leftJoin('bookings', 'homestays.id', '=', 'bookings.homestay_id')
+            ->groupBy('locations.id')
+            ->orderBy(DB::raw('count(*)'), 'desc')
+            ->orderBy('locations.id', 'asc')
+            ->limit(7)
+            ->select('locations.id', 'locations.name', 'locations.thumbnail')
             ->get();
+        return $this->sendResponse($locations, 'Top locations retrieved successfully');
     }
 }

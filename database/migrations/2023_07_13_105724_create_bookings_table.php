@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('end_date');
             $table->string('title')->nullable();
             $table->string('content')->nullable();
-            $table->integer('star')->nullable();
+            $table->integer('point')->nullable();
             $table->timestamps();
         });
     }

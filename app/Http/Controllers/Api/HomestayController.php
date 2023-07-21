@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use DB;
 
 class HomestayController extends BaseController
 {
@@ -93,6 +94,20 @@ class HomestayController extends BaseController
     {
         $homestay->delete();
         return $this->sendResponse([], 'Homestay deleted successfully.');
+    }
+    public function top(){
+        $homestays = DB::select ('SELECT t.id, t.name, l.name AS location_name, Round(AVG(b.point), 1) AS pointz, COUNT(b.point) AS countz, t.min_price FROM bookings b
+RIGHT JOIN
+(SELECT h.id, h.name, h.location_id, h.avatar, MIN(r.price) AS min_price FROM homestays h INNER JOIN rooms r ON h.id = r.homestay_id GROUP BY h.id) t ON  b.homestay_id = t.id
+INNER JOIN locations l ON l.id = t.location_id
+GROUP BY t.id
+ORDER BY AVG(b.point) DESC, countz DESC
+LIMIT 8 ');
+
+
+
+
+        return $this->sendResponse($homestays, 'Top homestays retrieved successfully');
     }
 
 }
