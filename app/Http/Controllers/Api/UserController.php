@@ -35,7 +35,6 @@ class UserController extends BaseController
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255|email|unique:users,email',
-            'avatar' => 'string',
             'phone_number' => 'min:10',
             'gender' => 'required|numeric|min:0|max:2',
             'birthday' => 'required|date',
@@ -73,11 +72,11 @@ class UserController extends BaseController
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255|email|unique:users,email,'.$user->id,
-            'avatar' => 'string',
             'phone_number' => 'min:10',
             'gender' => 'required|numeric|min:0|max:2',
             'birthday' => 'required|date',
             'role' => 'required|numeric|min:0|max:2',
+            'change_password' => 'required'
         ]);
 
         if($validator->fails()){
