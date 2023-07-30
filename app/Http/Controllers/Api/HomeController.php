@@ -24,7 +24,7 @@ class HomeController extends BaseController
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255|email|unique:users,email,'.$user->id,
             'avatar' => 'nullable|string',
-            'phone_number' => 'min:10',
+            'phone_number' => 'nullable|string|min:10',
             'gender' => 'required|numeric|min:0|max:2',
             'birthday' => 'required|date',
         ]);
