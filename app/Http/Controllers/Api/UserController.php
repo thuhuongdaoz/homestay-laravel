@@ -41,7 +41,7 @@ class UserController extends BaseController
             'birthday' => 'required|date',
             'role' => 'required|numeric|min:0|max:2',
             'password' => 'required|string|min:8',
-//            'c_password' => 'required|min:8|same:password',
+            'c_password' => 'required|min:8|same:password',
         ]);
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());
@@ -69,11 +69,11 @@ class UserController extends BaseController
     public function update(Request $request, User $user)
     {
         $input = $request->all();
-
         $validator = Validator::make($input, [
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255|email|unique:users,email,'.$user->id,
-            'phone_number' => 'min:10',
+            'avatar' => 'nullable|string',
+            'phone_number' => 'nullable|string|min:10',
             'gender' => 'required|numeric|min:0|max:2',
             'birthday' => 'required|date',
             'role' => 'required|numeric|min:0|max:2',
