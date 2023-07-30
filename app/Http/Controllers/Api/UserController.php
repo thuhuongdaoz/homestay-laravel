@@ -141,7 +141,10 @@ class UserController extends BaseController
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());
         }
-
+        $user = auth()->user();
+        if(!Hash::check($request['old_password'], $user->password )){
+            return $this->sendError('Validation Error.',['old_password' => ["Old Password Doesn't match!"]], 400);
+        }
         $user->password = $request['new_password'];
         $user->save();
         return $this->sendResponse([], 'Password changed successfully!');
