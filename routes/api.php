@@ -45,6 +45,7 @@ Route::post('upload-image',[FileController::class,'store']);
 Route::get('homestays',[HomestayController::class,'index']);
 Route::get('homestays/{homestay}',[HomestayController::class,'show']);
 Route::get('top-homestays',[HomestayController::class,'top']);
+Route::get('search-homestays',[HomestayController::class,'search']);
 
 
 Route::get('rooms', [RoomController::class,'index']);

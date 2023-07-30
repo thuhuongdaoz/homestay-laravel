@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Homestay extends Model
 {
@@ -25,4 +27,19 @@ class Homestay extends Model
 //            'breakfast',
     'utilities',
     ];
+    public function rooms(): HasMany
+    {
+        return $this->hasMany(Room::class);
+    }
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
+    }
+    /**
+     * Get the post that owns the comment.
+     */
+    public function location(): BelongsTo
+    {
+        return $this->belongsTo(Location::class);
+    }
 }

@@ -20,35 +20,44 @@ class RegisterController extends BaseController
      */
     public function register(Request $request): JsonResponse
     {
+//        dd($request->all());
+//        return $this->sendResponse($request->all(), 'User register successfully.');
+//        $messages = [
+//            'phone_number.min' => 'Invalid phone_number'
+//        ];
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255|email|unique:users,email',
-            'avatar' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            'phone_number' => 'min:10',
+//            'avatar' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'phone_number' => 'nullable|string|min:10',
             'gender' => 'required|numeric|min:0|max:2',
             'birthday' => 'required|date',
             'role' => 'required|numeric|min:0|max:2',
             'password' => 'required|string|min:8',
             'c_password' => 'required|min:8|same:password',
-        ]);
+        ],
+//            $messages
+
+        );
 
         if($validator->fails()){
+//            dd($validator->errors());
             return $this->sendError('Validation Error.', $validator->errors(), 400);
         }
 
         $input = $request->all();
 //        dd(isset($input['avatar']));
-        if (isset($input['avatar'])){
-            $path = $request->file('avatar')->store('public/avatars');
-            $input['avatar'] = Str::substr($path,7);
-        }
+//        if (isset($input['avatar'])){
+//            $path = $request->file('avatar')->store('public/avatars');
+//            $input['avatar'] = Str::substr($path,7);
+//        }
 //        $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
         $success['token'] =  $user->createToken('MyApp')->accessToken;
         $success['id'] =  $user->id;
         $success['name'] =  $user->name;
         $success['role'] = $user->role;
-        $success['avatar'] = $user->avatar;
+        $success['avatar'] = null;
 
 
         return $this->sendResponse($success, 'User register successfully.');
